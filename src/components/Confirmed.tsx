@@ -14,7 +14,6 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
 
   const totalAmount = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  // Formats cart into a WhatsApp checkout string
   const handleWhatsAppOrder = () => {
     const orderDetails = cart
       .map((item) => `• ${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`)
@@ -41,34 +40,25 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
           <h2 className="font-serif text-2xl font-bold text-amber-950">Order Confirmed</h2>
           <p className="text-sm text-stone-500 mb-6">We hope you enjoy your gourmet pastries!</p>
 
-          {/* Cart Item Summary */}
           <div className="bg-amber-50/50 rounded-xl p-4 space-y-3 mb-6 border border-amber-100/80">
-            {cart.map((item) => {
-              // Fallback check for nested thumbnail path vs direct string path
-              const imageSrc =
-                typeof item.image === 'string'
-                  ? item.image
-                  : item.image?.thumbnail || item.image?.desktop || '';
-
-              return (
-                <div key={item.name} className="flex items-center justify-between text-sm pb-2 border-b border-amber-100/60 last:border-0 last:pb-0">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={imageSrc}
-                      alt={item.name}
-                      className="w-12 h-12 rounded-lg object-cover bg-stone-100"
-                    />
-                    <div>
-                      <p className="font-semibold text-stone-800">{item.name}</p>
-                      <p className="text-xs text-stone-500">
-                        <span className="text-rose-600 font-bold mr-2">{item.quantity}x</span> @ ${item.price.toFixed(2)}
-                      </p>
-                    </div>
+            {cart.map((item) => (
+              <div key={item.name} className="flex items-center justify-between text-sm pb-2 border-b border-amber-100/60 last:border-0 last:pb-0">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.image.thumbnail}
+                    alt={item.name}
+                    className="w-12 h-12 rounded-lg object-cover"
+                  />
+                  <div>
+                    <p className="font-semibold text-stone-800">{item.name}</p>
+                    <p className="text-xs text-stone-500">
+                      <span className="text-rose-600 font-bold mr-2">{item.quantity}x</span> @ ${item.price.toFixed(2)}
+                    </p>
                   </div>
-                  <span className="font-semibold text-stone-800">${(item.price * item.quantity).toFixed(2)}</span>
                 </div>
-              );
-            })}
+                <span className="font-semibold text-stone-800">${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
 
             <div className="pt-3 border-t border-amber-200/60 flex items-center justify-between">
               <span className="text-sm font-medium text-stone-600">Order Total</span>
@@ -76,7 +66,6 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
             </div>
           </div>
 
-          {/* Business Call-to-Actions */}
           <div className="space-y-3">
             <button
               onClick={handleWhatsAppOrder}
