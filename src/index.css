@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+#root {
+  width: 1440px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+:root {
+  --Red: hsl(14, 86%, 42%);
+  /* main text */
+  --Green: hsl(159, 69%, 38%);
+  /* checked confirmed */
+  --Rose-50: hsl(20, 50%, 98%);
+  /* cart bg */
+  --Rose-100: hsl(13, 31%, 94%);
+  /* bg */
+  --Rose-300: hsl(14, 25%, 72%);
+  /* carbon-neutral */
+  --Rose-400: hsl(7, 20%, 60%);
+  /* @ $6.50 */
+  --Rose-500: hsl(12, 20%, 44%);
+  /* $46.50 */
+  --Rose-900: hsl(14, 65%, 9%);
+  /* order total */
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--Rose-100);
+  font-family: 'Red Hat Text', sans-serif;
+}
