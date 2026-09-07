@@ -1,6 +1,6 @@
 import React from 'react';
-import Product from './Product';
-import type { CartItem, Product as ProductType } from '../types/product';
+import { Product } from './Product';
+import type { Product as ProductType, CartItem } from '../types/product';
 
 interface ProductGridProps {
   products: ProductType[];
@@ -14,7 +14,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   onUpdateQuantity,
 }) => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       {products.map((product) => {
         const itemInCart = cartItems.find((item) => item.name === product.name);
         const quantity = itemInCart ? itemInCart.quantity : 0;

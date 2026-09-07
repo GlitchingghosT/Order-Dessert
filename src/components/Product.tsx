@@ -1,74 +1,73 @@
 import React from 'react';
-import type { Product as ProductType } from "../types/product"
-import { getImageUrl } from "../utils/getImageUrl"
-import { PiMinusCircleBold, PiPlusCircleBold } from "react-icons/pi";
-import { MdOutlineAddShoppingCart } from "react-icons/md";
+import { ShoppingCart, Plus, Minus } from 'lucide-react';
+import type { Product as ProductType } from '../types/product';
 
 interface ProductProps {
-    product: ProductType;
-    quantity: number;
-    onUpdateQuantity: (product: ProductType, quantity: number) => void;
+  product: ProductType;
+  quantity: number;
+  onUpdateQuantity: (product: ProductType, quantity: number) => void;
 }
 
-const Product: React.FC<ProductProps> = ({ product, quantity, onUpdateQuantity }) => {
-
-    const isSelected = quantity > 0;
-    
+export const Product: React.FC<ProductProps> = ({
+  product,
+  quantity,
+  onUpdateQuantity,
+}) => {
   return (
-    <main className='flex flex-col'>
-        <div className='relative'>
-            <div
-             className={`overflow-hidden rounded-xl border-2 transition-colors ${
-                isSelected ? "border-[var(--Red)] " : "border-transparent"
-            }`}>
-                <picture>
-                    <source media='(min-width: 1024px)' srcSet={getImageUrl(product.image.desktop)} />
-                    <source media='(min-width: 768px)' srcSet={getImageUrl(product.image.tablet)} />
-                    <img
-                        src={getImageUrl(product.image.mobile)} 
-                        alt={product.name}
-                        className='w-full object-cover block' />
-                </picture>
+    <div className="flex flex-col">
+      {/* Image Container */}
+      <div className="relative mb-8">
+        <picture>
+          <source media="(min-width: 1024px)" srcSet={product.image.desktop} />
+          <source media="(min-width: 640px)" srcSet={product.image.tablet} />
+          <source media="(max-width: 639px)" srcSet={product.image.mobile} />
+          <img
+            src={product.image.thumbnail}
+            alt={product.name}
+            className={`w-full h-60 object-cover rounded-xl shadow-sm transition-all duration-200 ${
+              quantity > 0 ? 'ring-2 ring-rose-600' : ''
+            }`}
+          />
+        </picture>
+
+        {/* Add to Cart / Quantity Pill Button */}
+        <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-40">
+          {quantity === 0 ? (
+            <button
+              onClick={() => onUpdateQuantity(product, 1)}
+              className="w-full py-2.5 px-4 bg-white hover:border-rose-600 hover:text-rose-600 text-stone-800 font-semibold text-xs rounded-full border border-stone-300 flex items-center justify-center gap-2 shadow-sm transition-all duration-200"
+            >
+              <ShoppingCart className="w-4 h-4 text-rose-600" />
+              Add to Cart
+            </button>
+          ) : (
+            <div className="w-full py-2 px-3 bg-rose-600 text-white font-semibold text-xs rounded-full flex items-center justify-between shadow-sm">
+              <button
+                onClick={() => onUpdateQuantity(product, quantity - 1)}
+                className="w-5 h-5 rounded-full border border-white flex items-center justify-center hover:bg-rose-700 transition-colors"
+                aria-label="Decrease quantity"
+              >
+                <Minus className="w-3 h-3 text-white" />
+              </button>
+              <span>{quantity}</span>
+              <button
+                onClick={() => onUpdateQuantity(product, quantity + 1)}
+                className="w-5 h-5 rounded-full border border-white flex items-center justify-center hover:bg-rose-700 transition-colors"
+                aria-label="Increase quantity"
+              >
+                <Plus className="w-3 h-3 text-white" />
+              </button>
             </div>
-                <div className='absolute -bottom-6.5 md:-bottom-5 left-1/2 -translate-x-1/2 max-w-50 md:max-w-38 w-full'>
-                    {!isSelected ? (
-                        <button 
-                        onClick={() => onUpdateQuantity(product, 1)}
-                        className='w-full flex items-center justify-center gap-2 bg-[var(--Rose-50)] border border-[var(--Rose-900)] text-[var(--Rose-900)] font-semibold py-4 md:py-2.75 px-2 rounded-full shadow-md hover:text-[var(--Red)] hover:border-[var(--Red)] transition-colors '
-                        >
-                            <MdOutlineAddShoppingCart className='text-[var(--Red)] text-2xl md:text-lg ' />
-                            <span className='text-xl md:text-sm font-semibold '> 
-                                Add to Cart
-                            </span>
-                        </button>
-                    ) : (
-                        <div className='w-full flex items-center justify-between bg-[var(--Red)] text-[var(--Rose-50)] py-4 md:py-2.5 px-2 rounded-full shadow-md '>
-                            <button
-                                onClick={() => onUpdateQuantity(product, Math.max(0, quantity - 1))}
-                                aria-label='Decrease quantity'
-                                className='flex items-center justify-center'
-                            >
-                                <PiMinusCircleBold className='text-3xl md:text-xl hover:scale-110 text-[var(--Rose-50)] transition-transform ' />
-                            </button >
-                                <span className='text-xl md:text-base font-semibold text-[var(--Rose-50)] '>{quantity}</span>
-                                <button
-                                onClick={() => onUpdateQuantity(product, quantity + 1)}
-                                aria-label='Increase quantity'
-                                className='flex items-center justify-center'
-                                >
-                                <PiPlusCircleBold className='text-3xl md:text-xl hover:scale-110 text-[var(--Rose-50)] transition-transform ' />
-                                </button>
-                        </div>
-                    )}
-                </div>
+          )}
         </div>
-            <div className='mt-9 flex flex-col gap-0 items-start'>
-                <p className='text-lg md:text-sm font-medium text-[var(--Rose-400)]'>{product.category}</p>
-                <h3 className='text-xl md:text-base font-semibold text-[var(--Rose-900)] '>{product.name}</h3>
-                <p className='text-xl md:text-base font-semibold text-[var(--Red)]'>${product.price.toFixed(2)}</p>
-            </div>
-    </main>
+      </div>
+
+      {/* Product Information */}
+      <div className="space-y-1">
+        <span className="text-xs text-stone-400 font-medium">{product.category}</span>
+        <h3 className="text-sm font-semibold text-stone-800">{product.name}</h3>
+        <p className="text-sm font-bold text-rose-600">${product.price.toFixed(2)}</p>
+      </div>
+    </div>
   );
 };
-
-export default Product

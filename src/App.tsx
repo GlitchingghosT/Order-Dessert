@@ -142,6 +142,7 @@ export function App() {
             <Cart
               cart={cart}
               onRemoveItem={handleRemoveItem}
+              onClearCart={handleClearCart}
               onConfirmOrder={() => setIsModalOpen(true)}
             />
           </div>

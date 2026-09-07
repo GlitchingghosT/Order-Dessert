@@ -18,9 +18,9 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
     const orderDetails = cart
       .map((item) => `• ${item.name} (x${item.quantity}) - $${(item.price * item.quantity).toFixed(2)}`)
       .join('%0A');
-    
+
     const message = `Hello Velvet %26 Vanilla! 🧁%0AI would like to place an order:%0A%0A${orderDetails}%0A%0A*Total Amount: $${totalAmount.toFixed(2)}*`;
-    window.open(`https://wa.me/2348000000000?text=${message}`, '_blank');
+    window.open(`https://wa.me/2349063392734?text=${message}`, '_blank');
   };
 
   return (
@@ -42,12 +42,15 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
 
           <div className="bg-amber-50/50 rounded-xl p-4 space-y-3 mb-6 border border-amber-100/80">
             {cart.map((item) => (
-              <div key={item.name} className="flex items-center justify-between text-sm pb-2 border-b border-amber-100/60 last:border-0 last:pb-0">
+              <div
+                key={item.name}
+                className="flex items-center justify-between text-sm pb-2 border-b border-amber-100/60 last:border-0 last:pb-0"
+              >
                 <div className="flex items-center gap-3">
                   <img
                     src={item.image.thumbnail}
                     alt={item.name}
-                    className="w-12 h-12 rounded-lg object-cover"
+                    className="w-12 h-12 rounded-lg object-cover bg-stone-100"
                   />
                   <div>
                     <p className="font-semibold text-stone-800">{item.name}</p>
@@ -56,7 +59,9 @@ export const Confirmed: React.FC<ConfirmedProps> = ({ isOpen, cart, onNewOrder }
                     </p>
                   </div>
                 </div>
-                <span className="font-semibold text-stone-800">${(item.price * item.quantity).toFixed(2)}</span>
+                <span className="font-semibold text-stone-800">
+                  ${(item.price * item.quantity).toFixed(2)}
+                </span>
               </div>
             ))}
 
