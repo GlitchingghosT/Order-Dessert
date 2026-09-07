@@ -1,76 +1,160 @@
-import './App.css';
-import { useState } from 'react';
-import Cart from './components/Cart';
-import ProductGrid from './components/ProductGrid';
-import OrderModal from './components/OrderModal'; // 1. Import OrderModal
-import type { CartItem, Product } from "./types/product";
+import { useState, useEffect, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import data from './data.json';
+import { Header } from './components/Header';
+import { Footer } from './components/Footer';
+import { ProductGrid } from './components/ProductGrid';
+import { Cart } from './components/Cart';
+import { Confirmed } from './components/Confirmed';
+import type { CartItem, Product as ProductType } from './types/product';
 
-function App() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+const CART_STORAGE_KEY = 'velvet_vanilla_cart_v1';
 
-  const handleUpdateQuantity = (product: Product, quantity: number) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.name === product.name);
+export function App() {
+  // 1. Persistent Cart from LocalStorage
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const savedCart = localStorage.getItem(CART_STORAGE_KEY);
+      return savedCart ? JSON.parse(savedCart) : [];
+    } catch {
+      return [];
+    }
+  });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+
+  // Sync state changes to LocalStorage
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  }, [cart]);
+
+  // Dynamic unique categories from JSON data
+  const categories = useMemo(() => {
+    const set = new Set((data as ProductType[]).map((p) => p.category));
+    return ['All', ...Array.from(set)];
+  }, []);
+
+  // Filtered Products List
+  const filteredProducts = useMemo(() => {
+    return (data as ProductType[]).filter((product) => {
+      const matchesSearch =
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
+  const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // Quantity updates handler
+  const handleUpdateQuantity = (product: ProductType, quantity: number) => {
+    setCart((prevCart) => {
       if (quantity <= 0) {
-        return prevItems.filter((item) => item.name !== product.name);
+        return prevCart.filter((item) => item.name !== product.name);
       }
-
-      if (existingItem) {
-        return prevItems.map((item) =>
+      const exists = prevCart.find((item) => item.name === product.name);
+      if (exists) {
+        return prevCart.map((item) =>
           item.name === product.name ? { ...item, quantity } : item
         );
       }
-
-      return [...prevItems, { ...product, quantity }];
+      return [...prevCart, { ...product, quantity }];
     });
   };
 
-  const handleRemoveItem = (productName: string) => {
-    setCartItems((prevItems) => prevItems.filter((item) => item.name !== productName));
+  const handleRemoveItem = (name: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.name !== name));
   };
 
-  const handleConfirmOrder = () => {
-    if (cartItems.length > 0) {
-      setIsModalOpen(true);
-    }
-  };
-
-  const handleResetOrder = () => {
-    setCartItems([]);
+  const handleClearCart = () => {
+    setCart([]);
     setIsModalOpen(false);
   };
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
   return (
-    <main className='py-10 min-h-screen mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 bg-[var(--Rose-100)]'>
-      <h1 className='text-4xl text-[var(--Rose-900)] font-bold text-start'>Desserts</h1>
-      <div className='md:flex gap-10 pt-6'>
-        <div className='md:w-[70%]'>
-          <ProductGrid
-            cartItems={cartItems}
-            onUpdateQuantity={handleUpdateQuantity}
-          />
-        </div>
-        <div className='md:w-[30%]'>
-          <Cart
-            cartItems={cartItems}
-            onRemoveItem={handleRemoveItem}
-            onConfirmOrder={handleConfirmOrder}
-          />
-        </div>
-      </div>
-
-      <OrderModal
-        isOpen={isModalOpen}
-        cartItems={cartItems}
-        totalPrice={totalPrice}
-        onResetOrder={handleResetOrder}
+    <div className="min-h-screen flex flex-col font-sans bg-[#FCF8F5]">
+      <Header
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        cartCount={totalCartCount}
+        onOpenCartMobile={() => {
+          document.getElementById('cart-section')?.scrollIntoView({ behavior: 'smooth' });
+        }}
       />
-    </main>
+
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        {/* Category Pills Bar */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 scrollbar-none">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all ${
+                selectedCategory === cat
+                  ? 'bg-rose-600 text-white shadow-sm'
+                  : 'bg-white text-stone-600 hover:bg-stone-100 border border-stone-200'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Main Grid + Cart Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Products Column */}
+          <div className="lg:col-span-8">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-serif text-3xl font-bold text-amber-950">Desserts Menu</h2>
+              <span className="text-xs text-stone-500 font-medium">
+                Showing {filteredProducts.length} items
+              </span>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {filteredProducts.length > 0 ? (
+                <motion.div
+                  key={selectedCategory + searchQuery}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ProductGrid
+                    products={filteredProducts}
+                    cartItems={cart}
+                    onUpdateQuantity={handleUpdateQuantity}
+                  />
+                </motion.div>
+              ) : (
+                <div className="text-center py-16 bg-white rounded-2xl border border-dashed border-stone-200">
+                  <p className="text-stone-500 text-sm">No delicious treats matched your search.</p>
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Cart Column */}
+          <div id="cart-section" className="lg:col-span-4 sticky top-24">
+            <Cart
+              cart={cart}
+              onRemoveItem={handleRemoveItem}
+              onConfirmOrder={() => setIsModalOpen(true)}
+            />
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+
+      <Confirmed
+        isOpen={isModalOpen}
+        cart={cart}
+        onNewOrder={handleClearCart}
+      />
+    </div>
   );
 }
-
-export default App;
