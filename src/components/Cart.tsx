@@ -13,7 +13,7 @@ const Cart: React.FC<CartProps> = ({ cartItems, onRemoveItem, onConfirmOrder }) 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <section className='bg-white rounded-2xl p-6 shadow-sm'>
+    <section className='bg-white rounded-2xl p-6 shadow-sm mt-8 md:mt-0'>
       <h2 className='text-2xl font-bold text-[var(--Red)] mb-6'>
         Your Cart ({totalCount})
       </h2>
