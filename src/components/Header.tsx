@@ -21,14 +21,14 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-amber-900 text-amber-100 flex items-center justify-center font-serif text-xl font-bold shadow-inner">
-            V&V
+            V&amp;V
           </div>
           <div>
             <h1 className="font-serif text-2xl font-bold text-amber-950 tracking-tight flex items-center gap-2">
-              Velvet & Vanilla
+              Velvet &amp; Vanilla
               <Sparkles className="w-4 h-4 text-amber-600 hidden sm:inline" />
             </h1>
-            <p className="text-xs text-amber-800/70 font-medium hidden sm:block">Artisan Bakery & Patisserie</p>
+            <p className="text-xs text-amber-800/70 font-medium hidden sm:block">Artisan Bakery &amp; Patisserie</p>
           </div>
         </div>
 
@@ -46,6 +46,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile Quick Cart Button */}
         <button
+          type="button"
           onClick={onOpenCartMobile}
           className="lg:hidden relative p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-900 rounded-full transition-colors flex items-center gap-2"
           aria-label="View shopping cart"
