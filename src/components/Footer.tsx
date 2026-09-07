@@ -5,12 +5,12 @@ export const Footer: React.FC = () => {
   return (
     <footer className="bg-amber-950 text-amber-100 mt-20 border-t border-amber-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-left">
           
           {/* Brand Info */}
-          <div className="space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-white">Velvet & Vanilla</h2>
-            <p className="text-amber-200/80 text-sm leading-relaxed">
+          <div className="space-y-4 text-left">
+            <h2 className="font-serif text-2xl font-bold text-white text-left">Velvet & Vanilla</h2>
+            <p className="text-amber-200/80 text-sm leading-relaxed text-left">
               Crafting unforgettable moments through artisanal pastries, gourmet cakes, and traditional European dessert recipes.
             </p>
             <div className="flex items-center gap-2 text-xs text-amber-300 bg-amber-900/50 p-2.5 rounded-lg border border-amber-800">
@@ -20,9 +20,9 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Quick Contact */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-white text-base">Store Location</h3>
-            <ul className="space-y-2.5 text-sm text-amber-200/80">
+          <div className="space-y-3 text-left">
+            <h3 className="font-semibold text-white text-base text-left">Store Location</h3>
+            <ul className="space-y-2.5 text-sm text-amber-200/80 text-left">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-amber-400 mt-0.5 shrink-0" />
                 <span>14 Patisserie Boulevard, Victoria Island, Lagos</span>
@@ -39,21 +39,24 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Store Hours */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-white text-base">Opening Hours</h3>
-            <ul className="space-y-2 text-sm text-amber-200/80">
-              <li className="flex items-center gap-2">
+          <div className="space-y-3 text-left">
+            <h3 className="font-semibold text-white text-base text-left">Opening Hours</h3>
+            <ul className="space-y-2 text-sm text-amber-200/80 text-left">
+              <li className="flex items-center gap-2.5">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0" />
                 <span>Mon - Fri: 7:30 AM - 8:00 PM</span>
               </li>
-              <li className="pl-6">Sat - Sun: 8:30 AM - 9:00 PM</li>
+              <li className="flex items-center gap-2.5">
+                <Clock className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>Sat - Sun: 8:30 AM - 9:00 PM</span>
+              </li>
             </ul>
           </div>
 
           {/* Legal / Navigation Links */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-white text-base">Customer Care</h3>
-            <ul className="space-y-2 text-sm text-amber-200/80">
+          <div className="space-y-3 text-left">
+            <h3 className="font-semibold text-white text-base text-left">Customer Care</h3>
+            <ul className="space-y-2 text-sm text-amber-200/80 text-left">
               <li><a href="#allergen-info" className="hover:text-amber-400 transition-colors">Allergen & Dietary Guide</a></li>
               <li><a href="#shipping" className="hover:text-amber-400 transition-colors">Same-Day Delivery Policy</a></li>
               <li><a href="#catering" className="hover:text-amber-400 transition-colors">Custom Events & Catering</a></li>
